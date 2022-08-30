@@ -47,6 +47,7 @@ export default function ChatBody() {
   let [name, setName] = useState(allChatUsers[0].name);
   let [userImg, setUserImg] = useState(allChatUsers[0].image);
   let [text, setText] = useState(allChatUsers[0].text);
+  let [query, setQuery] = useState("");
 
   function selectChat(e) {
     setUserImg(e.currentTarget.children[0].children[0].src);
@@ -81,6 +82,7 @@ export default function ChatBody() {
               type="text"
               placeholder="Search or start new chat"
               required
+              onChange={(e) => setQuery(e.target.value)}
             />
           </div>
         </div>
@@ -88,41 +90,47 @@ export default function ChatBody() {
         <div className="chatList-items">
           <h1>Chats</h1>
 
-          {allChatUsers.map((item, index) => {
-            return (
-              <div
-                style={{ animationDelay: `0.${index + 1}s` }}
-                onClick={selectChat}
-                className={`chatList-item ${
-                  (item.active ? "active" : "")
-                    ? item.active
-                      ? "active"
+          {allChatUsers
+            .filter((user) =>
+              user.name.toLowerCase().includes(query.toLowerCase())
+            )
+            .map((item, index) => {
+              return (
+                <div
+                  style={{ animationDelay: `0.${index + 1}s` }}
+                  onClick={selectChat}
+                  className={`chatList-item ${
+                    (item.active ? "active" : "")
+                      ? item.active
+                        ? "active"
+                        : ""
                       : ""
-                    : ""
-                } 
+                  } 
                      `}
-              >
-                <div className="Avatar">
-                  <img
-                    src={item.image ? item.image : "http://placehold.it/80x80"}
-                    alt="#"
-                    className="user-icon"
-                  />
-                  <span>
-                    <i className="fa-solid fa-circle-check user-check"></i>
-                  </span>
-                </div>
+                >
+                  <div className="Avatar">
+                    <img
+                      src={
+                        item.image ? item.image : "http://placehold.it/80x80"
+                      }
+                      alt="#"
+                      className="user-icon"
+                    />
+                    <span>
+                      <i className="fa-solid fa-circle-check user-check"></i>
+                    </span>
+                  </div>
 
-                <div className="chatData">
-                  <p title={item.name}>{item.name}</p>
-                  <p className="chatText" title={item.text}>
-                    {item.text}
-                  </p>
+                  <div className="chatData">
+                    <p title={item.name}>{item.name}</p>
+                    <p className="chatText" title={item.text}>
+                      {item.text}
+                    </p>
+                  </div>
+                  <div className="activeTime">{item.date}</div>
                 </div>
-                <div className="activeTime">{item.date}</div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
 
